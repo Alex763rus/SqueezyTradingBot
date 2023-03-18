@@ -1,8 +1,8 @@
-package com.example.squeezyTradingBot.service.database;
+package com.example.squeezyTradingBot.service;
 
+import com.example.squeezyTradingBot.config.WhiteListUserConfig;
 import com.example.squeezyTradingBot.model.jpa.User;
-import com.example.squeezyTradingBot.model.jpa.UserRepository;
-import com.example.squeezyTradingBot.service.StateService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,37 +12,45 @@ import java.sql.Timestamp;
 
 @Slf4j
 @Service
+@Data
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private StateService stateService;
 
     @Autowired
-    private StateService stateService;
+    private WhiteListUserConfig whiteListUsers;
 
     public User getUser(Message message){
         Long chatId = message.getChatId();
         User user = stateService.getUser(chatId);
         if(user == null){
-            user = userRepository.findById(chatId).orElse(registeredUser(message));
+            if(!whiteListUsers.getWhiteListChatsID().contains(chatId)){
+                return null;
+            }
+            user = createUser(message);
+            stateService.registeredUser(user);
         }
         return user;
     }
 
-    private User registeredUser(Message message) {
+    private User createUser(Message message) {
         var chatId = message.getChatId();
         var chat = message.getChat();
-
         User user = new User();
-
         user.setChatId(chatId);
         user.setFirstName(chat.getFirstName());
         user.setLastName(chat.getLastName());
         user.setUserName(chat.getUserName());
         user.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
-
-        userRepository.save(user);
-        log.info("user saved: " + user);
         return user;
     }
 }
+//      @PostConstruct
+//    private void initWhiteList(){
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            whiteListUserConfig = objectMapper.readValue(this.getClass().getResource("WhiteListUsers.json"), WhiteListUserConfig.class);
+//        } catch (IOException e) {
+//        }
+//    }
