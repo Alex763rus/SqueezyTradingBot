@@ -9,7 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,15 +36,11 @@ class squeezyTradingBotApplicationTests {
 	private WhiteListUserConfig whiteListUserConfig;
 
 	@Test
-	void deserializationWhiteList(){
-//		ObjectMapper objectMapper = new ObjectMapper();
-//
-//		File file = new File("src\\test\\resources\\WhiteListUsers.json");
-//		try {
-//			whiteListUserConfig = objectMapper.readValue(file, WhiteListUserConfig.class);
-//		} catch (IOException e) {
-//		}
-//		System.out.println(whiteListUserConfig);
+	void deserializationWhiteList() throws IOException, URISyntaxException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		URL url = this.getClass().getClassLoader().getResource("WhiteListUsers.json");
+		whiteListUserConfig = objectMapper.readValue(String.join(System.lineSeparator(),Files.readAllLines(Paths.get(url.toURI()))), WhiteListUserConfig.class);
+		System.out.println(whiteListUserConfig);
 	}
 
 }
