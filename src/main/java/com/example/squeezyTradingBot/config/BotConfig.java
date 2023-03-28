@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -18,6 +20,8 @@ import java.util.Set;
 @Configuration
 @Data
 @PropertySource("application.properties")
+@EnableWebMvc
+@EnableTransactionManagement
 public class BotConfig {
 
     @Value("${bot.version}")
@@ -50,4 +54,6 @@ public class BotConfig {
         }
         return whiteListUserConfig;
     }
+
+    //REST:
 }
