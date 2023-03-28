@@ -31,4 +31,10 @@ public abstract class BaseRequest {
     public String getEmojiCode(Emoji emoji){
         return EmojiParser.parseToUnicode(emoji.getCode());
     }
+
+    protected String getLineParam(String name, Object value) {
+        StringBuilder lineParam = new StringBuilder();
+        lineParam.append(star).append(name).append(star).append(value).append(endLine);
+        return lineParam.toString();
+    }
 }

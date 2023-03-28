@@ -29,10 +29,4 @@ public class PositionOpen extends BaseRequest {
         return message.toString();
     }
 
-    protected String getLineParam(String name, Object value) {
-        StringBuilder lineParam = new StringBuilder();
-        lineParam.append(star).append(name).append(star).append(value).append(endLine);
-        return lineParam.toString();
-    }
-
 }
