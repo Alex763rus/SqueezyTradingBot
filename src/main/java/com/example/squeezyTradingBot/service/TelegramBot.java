@@ -73,7 +73,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             return;
         }
         User user = userService.getUser(message);
-        if(user == null){
+        if (user == null) {
             log.warn("Пользователь отсутствует в белом списке, ответа не получит:" + message.getChatId());
             return;
         }
@@ -82,8 +82,22 @@ public class TelegramBot extends TelegramLongPollingBot {
             if (answer instanceof BotApiMethod) {
                 execute((BotApiMethod) answer);
             }
+            if (answer instanceof SendDocument) {
+                execute((SendDocument) answer);
+            }
         } catch (TelegramApiException e) {
             log.error("Ошибка во время обработки сообщения: " + e.getMessage());
         }
+
+    }
+
+    private void deleteLastMessage(Update update) throws TelegramApiException {
+        EditMessageText editMessageText = new EditMessageText();
+        long messageId = update.getCallbackQuery().getMessage().getMessageId();
+        long chatId = update.getCallbackQuery().getMessage().getChatId();
+        editMessageText.setChatId(String.valueOf(chatId));
+        editMessageText.setMessageId((int) messageId);
+        editMessageText.setText("Документ готов!");
+        execute(editMessageText);
     }
 }

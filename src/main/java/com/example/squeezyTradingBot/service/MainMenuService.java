@@ -1,5 +1,6 @@
 package com.example.squeezyTradingBot.service;
 
+import com.example.squeezyTradingBot.config.BotConfig;
 import com.example.squeezyTradingBot.model.jpa.User;
 import com.example.squeezyTradingBot.model.mainMenu.*;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,13 @@ import java.util.List;
 public class MainMenuService {
 
     @Autowired
+    BotConfig botConfig;
+    @Autowired
     private MainMenuStart mainMenuStart;
+
+    @Autowired
+    private MainMenuStatistic mainMenuStatistic;
+
     @Autowired
     private MainMenuDefault mainMenuActivityDefault;
 
@@ -30,6 +37,9 @@ public class MainMenuService {
     public void mainMenuInit() {
         mainMenu = new ArrayList();
         mainMenu.add(mainMenuStart);
+        if(botConfig.getBotStand().equals("IFT")){
+            mainMenu.add(mainMenuStatistic);
+        }
     }
 
     public PartialBotApiMethod messageProcess(User user, Update update) {
