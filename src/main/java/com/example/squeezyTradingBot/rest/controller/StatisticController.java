@@ -1,62 +1,60 @@
-package com.example.squeezyTradingBot.model.mainMenu;
+package com.example.squeezyTradingBot.rest.controller;
 
-import com.example.squeezyTradingBot.config.BotConfig;
 import com.example.squeezyTradingBot.model.statistic.TestData;
-import com.example.squeezyTradingBot.model.jpa.User;
+import com.example.squeezyTradingBot.rest.request.BaseResponse;
+import com.example.squeezyTradingBot.rest.request.SqueezyStart;
+import com.example.squeezyTradingBot.rest.request.StatisticSlTpFinish;
+import com.example.squeezyTradingBot.service.DistributionService;
 import com.example.squeezyTradingBot.service.ExcelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
 @Slf4j
-public class MainMenuStatistic extends MainMenu {
+@RestController
+@RequestMapping("/statistic")
+public class StatisticController {
 
-    final String MENU_NAME = "/statistic";
+    private static final String SUCCESS_STATUS = "success";
+    private static final String ERROR_STATUS = "error";
+    private static final int CODE_SUCCESS = 100;
+
+    @Autowired
+    DistributionService distributionService;
 
     @Autowired
     private ExcelService excelService;
-
-    @Autowired
-    private BotConfig botConfig;
-
-    @Override
-    public String getMenuName() {
-        return MENU_NAME;
-    }
-
-    @Override
-    public PartialBotApiMethod menuRun(User user, Update update) {
-        long chatId = update.getMessage().getChatId();
-        List<List<String>> excelData = getExcelData();
-        SendDocument sendDocument = new SendDocument();
-        sendDocument.setDocument(excelService.createExcelDocument(instrument, excelData));
-        sendDocument.setChatId(String.valueOf(chatId));
-        return sendDocument;
-    }
 
     private String instrument;
     private double stepSqueezy;
     private double stepProfit;
     private double stepLoss;
+    @PostMapping("/sltpfinish")
+    public BaseResponse sltpfinish(@RequestBody StatisticSlTpFinish request) {
+        log.info(String.valueOf(request));
+        final BaseResponse response = new BaseResponse(SUCCESS_STATUS, CODE_SUCCESS);
+        List<List<String>> excelData = getExcelData(request.getFileName());
+        String excelFileName = request.getFileName().substring(request.getFileName().lastIndexOf("\\") + 1, request.getFileName().lastIndexOf(".")) + "_";
+        distributionService.sendTgMessageToAllWhiteList(excelService.createExcelDocument(excelFileName, instrument, excelData));
+        return response;
+    }
 
-    private List<List<String>> getExcelData() {
+    private List<List<String>> getExcelData(String statisticFileName) {
         List<List<String>> excelData = new ArrayList<>();
         ArrayList<TestData> testData = new ArrayList<>();
         boolean isHead = true;
-        try (BufferedReader reader = new BufferedReader(new FileReader(botConfig.getStatisticPathSource()))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(statisticFileName))) {
             String buf;
             while ((buf = reader.readLine()) != null) {
                 String[] lineArr = buf.replace(",", ".").split(";");
@@ -69,11 +67,11 @@ public class MainMenuStatistic extends MainMenu {
                     continue;
                 }
                 testData.add(
-                        new TestData(lineArr[0] //groupType FlatSell
-                                , lineArr[1]//side Sell
-                                , Double.parseDouble(lineArr[2])//percent 1,0
-                                , Double.parseDouble(lineArr[3])//percentProfit 1,5
-                                , Double.parseDouble(lineArr[4]))//percentLoss 1,5
+                        new TestData(lineArr[0]                     //groupType FlatSell
+                                , lineArr[1]                        //side Sell
+                                , Double.parseDouble(lineArr[2])    //percent 1,0
+                                , Double.parseDouble(lineArr[3])    //percentProfit 1,5
+                                , Double.parseDouble(lineArr[4]))   //percentLoss 1,5
                 );
             }
         } catch (FileNotFoundException e) {
@@ -81,11 +79,11 @@ public class MainMenuStatistic extends MainMenu {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        try {
-            Files.deleteIfExists(Path.of(botConfig.getStatisticPathSource()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            Files.deleteIfExists(Path.of(botConfig.getStatisticPathSource()));
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         excelData.addAll(getPrepareDataProfit(testData, "UPBUY"));
         excelData.addAll(getPrepareDataProfit(testData, "UPSELL"));
         excelData.addAll(getPrepareDataProfit(testData, "DOWNBUY"));
@@ -193,9 +191,5 @@ public class MainMenuStatistic extends MainMenu {
             excelData.add(excelDataLine);
         }
         return excelData;
-    }
-    @Override
-    public String getDescription() {
-        return "Статистика";
     }
 }

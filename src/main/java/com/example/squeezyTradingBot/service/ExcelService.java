@@ -17,10 +17,10 @@ import java.util.List;
 @Service
 public class ExcelService {
 
-    public InputFile createExcelDocument(String sheetName, List<List<String>> excelData){
+    public InputFile createExcelDocument(String fileName, String sheetName, List<List<String>> excelData){
         File tmpFile;
         try {
-            tmpFile = Files.createTempFile("exel", ".xls").toFile();
+            tmpFile = Files.createTempFile(fileName, ".xls").toFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -24,9 +24,6 @@ public class MainMenuService {
     private MainMenuStart mainMenuStart;
 
     @Autowired
-    private MainMenuStatistic mainMenuStatistic;
-
-    @Autowired
     private MainMenuDefault mainMenuActivityDefault;
 
     @Autowired
@@ -37,9 +34,6 @@ public class MainMenuService {
     public void mainMenuInit() {
         mainMenu = new ArrayList();
         mainMenu.add(mainMenuStart);
-        if(botConfig.getBotStand().equals("IFT")){
-            mainMenu.add(mainMenuStatistic);
-        }
     }
 
     public PartialBotApiMethod messageProcess(User user, Update update) {
