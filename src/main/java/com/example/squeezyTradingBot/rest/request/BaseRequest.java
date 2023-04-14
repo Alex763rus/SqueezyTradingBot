@@ -7,8 +7,6 @@ public abstract class BaseRequest {
 
     public static final char star = '*';
     public static final char space = ' ';
-    public static final char apostrL = '_';
-    public static final char apostrR = '_';
     public static final String endLine = "\n";
 
     public abstract String toMessage();

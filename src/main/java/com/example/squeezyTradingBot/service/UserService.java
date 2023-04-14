@@ -10,6 +10,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.sql.Timestamp;
 
+import static com.example.squeezyTradingBot.service.function.InitializationFunction.CREATE_USER;
+
 @Slf4j
 @Service
 @Data
@@ -21,36 +23,17 @@ public class UserService {
     @Autowired
     private WhiteListUserConfig whiteListUsers;
 
-    public User getUser(Message message){
+    public User getUser(Message message) {
         Long chatId = message.getChatId();
         User user = stateService.getUser(chatId);
-        if(user == null){
-            if(!whiteListUsers.getWhiteListChatsID().contains(chatId)){
+        if (user == null) {
+            if (!whiteListUsers.getWhiteListChatsID().contains(chatId)) {
                 return null;
             }
-            user = createUser(message);
+            user = CREATE_USER.apply(message);
             stateService.registeredUser(user);
         }
         return user;
     }
 
-    private User createUser(Message message) {
-        var chatId = message.getChatId();
-        var chat = message.getChat();
-        User user = new User();
-        user.setChatId(chatId);
-        user.setFirstName(chat.getFirstName());
-        user.setLastName(chat.getLastName());
-        user.setUserName(chat.getUserName());
-        user.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
-        return user;
-    }
 }
-//      @PostConstruct
-//    private void initWhiteList(){
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//            whiteListUserConfig = objectMapper.readValue(this.getClass().getResource("WhiteListUsers.json"), WhiteListUserConfig.class);
-//        } catch (IOException e) {
-//        }
-//    }

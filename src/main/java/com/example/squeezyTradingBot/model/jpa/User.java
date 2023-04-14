@@ -1,11 +1,15 @@
 package com.example.squeezyTradingBot.model.jpa;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.Timestamp;
 import java.util.Objects;
 
-@Data
+@Getter
+@SuperBuilder(setterPrefix = "set", builderMethodName = "init", toBuilder = true)
+@ToString
 public class User {
 
     private Long chatId;
@@ -16,17 +20,6 @@ public class User {
     private String userName;
 
     private Timestamp registeredAt;
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "chatId=" + chatId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", userName='" + userName + '\'' +
-                ", registeredAt=" + registeredAt +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {

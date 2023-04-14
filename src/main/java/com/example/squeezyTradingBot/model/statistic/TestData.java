@@ -1,8 +1,11 @@
 package com.example.squeezyTradingBot.model.statistic;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@SuperBuilder(setterPrefix = "set", builderMethodName = "init", toBuilder = true)
 public class TestData {
 
 

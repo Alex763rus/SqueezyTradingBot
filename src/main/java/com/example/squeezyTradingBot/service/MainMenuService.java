@@ -19,7 +19,7 @@ import java.util.List;
 public class MainMenuService {
 
     @Autowired
-    BotConfig botConfig;
+    private BotConfig botConfig;
     @Autowired
     private MainMenuStart mainMenuStart;
 
