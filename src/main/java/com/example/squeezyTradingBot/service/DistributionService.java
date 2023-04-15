@@ -6,6 +6,7 @@ import com.example.squeezyTradingBot.enums.Emoji;
 import com.example.squeezyTradingBot.rest.request.BaseResponse;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -33,36 +34,36 @@ public class DistributionService {
 
     @PostConstruct
     public void init() {
-        StringBuilder message = new StringBuilder(EmojiParser.parseToUnicode(Emoji.ROBOT_FACE.getCode())).append(" Squeezy telegramm bot was started!\n");
+        val message = new StringBuilder(EmojiParser.parseToUnicode(Emoji.ROBOT_FACE.getCode())).append(" Squeezy telegramm bot was started!\n");
         message.append("Version: ").append(botConfig.getBotVersion());
         sendTgMessageToAllWhiteList(message.toString());
     }
 
     @PreDestroy
-    public void squeezyExit(){
-        StringBuilder message = new StringBuilder(EmojiParser.parseToUnicode(Emoji.ROBOT_FACE.getCode())).append(" Squeezy telegramm bot will be *STOPPED*!\n");
+    public void squeezyExit() {
+        val message = new StringBuilder(EmojiParser.parseToUnicode(Emoji.ROBOT_FACE.getCode())).append(" Squeezy telegramm bot will be *STOPPED*!\n");
         message.append("Version: ").append(botConfig.getBotVersion()).append("\n");
         message.append("*Buy!*");
         sendTgMessageToAllWhiteList(message.toString());
     }
 
-    public void sendTgMessageToAllWhiteList(String message){
-        try {
-            for (Long chatId:whiteListUserConfig.getWhiteListChatsID()) {
-                SendMessage sendMessage = new SendMessage(chatId.toString(), message);
+    public void sendTgMessageToAllWhiteList(String message) {
+        for (Long chatId : whiteListUserConfig.getWhiteListChatsID()) {
+            val sendMessage = new SendMessage(chatId.toString(), message);
+            try {
                 sendMessage.setParseMode(PARSE_MODE);
                 telegramBot.execute(sendMessage);
+            } catch (TelegramApiException e) {
+                log.error(e.getMessage());
             }
-        } catch (TelegramApiException e) {
-            log.error(e.getMessage());
         }
     }
 
-    public void sendTgMessageToAllWhiteList(InputFile inputFile){
+    public void sendTgMessageToAllWhiteList(InputFile inputFile) {
         try {
-            SendDocument sendDocument = new SendDocument();
+            val sendDocument = new SendDocument();
             sendDocument.setDocument(inputFile);
-            for (Long chatId:whiteListUserConfig.getWhiteListChatsID()) {
+            for (Long chatId : whiteListUserConfig.getWhiteListChatsID()) {
                 sendDocument.setChatId(String.valueOf(chatId));
                 telegramBot.execute(sendDocument);
             }

@@ -2,16 +2,21 @@ package com.example.squeezyTradingBot.rest.request;
 
 
 import com.example.squeezyTradingBot.enums.Emoji;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@ToString
+@Setter
 public class PositionOpen extends BaseRequest {
 
     protected String stand;
     protected String currency;
+
     protected String number;
     protected String dateStart;
-
     protected String side;
     protected double volume;
     protected String groupType;

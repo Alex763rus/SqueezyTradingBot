@@ -1,9 +1,12 @@
 package com.example.squeezyTradingBot.rest.request;
 
-import lombok.Data;
-import org.springframework.stereotype.Component;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@ToString
+@Setter
 public class StatisticSlTpFinish extends BaseRequest {
     private String fileName;
 

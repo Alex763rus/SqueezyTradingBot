@@ -1,6 +1,9 @@
 package com.example.squeezyTradingBot.config;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,15 +16,16 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 @Configuration
-@Data
-@PropertySource("application.properties")
+@Getter
+@ToString
+@Setter
 @EnableWebMvc
 @EnableTransactionManagement
+@PropertySource("application.properties")
 public class BotConfig {
 
     @Value("${bot.version}")
     String botVersion;
-
 
     @Value("${bot.stand}")
     String botStand;
@@ -32,17 +36,11 @@ public class BotConfig {
     @Value("${bot.token}")
     String botToken;
 
-    @Value("${statistic.path.source}")
-    String statisticPathSource;
-
     @Bean
     public WhiteListUserConfig whiteListUsers() throws URISyntaxException, IOException {
-        WhiteListUserConfig whiteListUserConfig = new WhiteListUserConfig();
-        Set<Long> whiteListChatsID = new HashSet<>();
-        whiteListChatsID.add(799008767L);
-        whiteListChatsID.add(358667973L);
-        whiteListUserConfig.setWhiteListChatsID(whiteListChatsID);
-        return whiteListUserConfig;
+        return WhiteListUserConfig.init()
+                .setWhiteListChatsID(Set.of(799008767L/*, 358667973L*/))
+                .build();
     }
 
 }

@@ -2,7 +2,13 @@ package com.example.squeezyTradingBot.rest.request;
 
 import com.example.squeezyTradingBot.enums.Emoji;
 import com.vdurmont.emoji.EmojiParser;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import lombok.val;
 
+@Getter
+@ToString
 public abstract class BaseRequest {
 
     public static final char star = '*';
@@ -31,7 +37,7 @@ public abstract class BaseRequest {
     }
 
     protected String getLineParam(String name, Object value) {
-        StringBuilder lineParam = new StringBuilder();
+        val lineParam = new StringBuilder();
         lineParam.append(star).append(name).append(star).append(value).append(endLine);
         return lineParam.toString();
     }

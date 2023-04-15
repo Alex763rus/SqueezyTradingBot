@@ -1,8 +1,12 @@
 package com.example.squeezyTradingBot.rest.request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@SuperBuilder(setterPrefix = "set", builderMethodName = "init", toBuilder = true)
+@ToString
 public class BaseResponse {
     private final String status;
     private final Integer code;

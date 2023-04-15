@@ -3,6 +3,7 @@ package com.example.squeezyTradingBot.model.mainMenu;
 import com.example.squeezyTradingBot.model.jpa.User;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -20,7 +21,7 @@ public class MainMenuStart extends MainMenu {
 
     @Override
     public SendMessage menuRun(User user, Update update) {
-        String answer = EmojiParser.parseToUnicode("Hello, " + user.getFirstName() + "!" + " :blush:");
+        val answer = EmojiParser.parseToUnicode("Hello, " + user.getFirstName() + "!" + " :blush:");
         return new SendMessage(user.getChatId().toString(),  answer);
     }
 

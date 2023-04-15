@@ -4,6 +4,7 @@ import com.example.squeezyTradingBot.config.BotConfig;
 import com.example.squeezyTradingBot.model.jpa.User;
 import com.example.squeezyTradingBot.model.mainMenu.*;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -18,8 +19,6 @@ import java.util.List;
 @Service
 public class MainMenuService {
 
-    @Autowired
-    private BotConfig botConfig;
     @Autowired
     private MainMenuStart mainMenuStart;
 
@@ -55,10 +54,8 @@ public class MainMenuService {
     }
 
     public List<BotCommand> getMainMenuComands() {
-        List<BotCommand> listofCommands = new ArrayList<>();
-        for (MainMenuActivity mainMenuActivity : mainMenu) {
-            listofCommands.add(new BotCommand(mainMenuActivity.getMenuName(), mainMenuActivity.getDescription()));
-        }
-        return listofCommands;
+        return mainMenu.stream()
+                .map(source -> BotCommand.builder().command(source.getMenuName()).description(source.getDescription()).build())
+                .toList();
     }
 }

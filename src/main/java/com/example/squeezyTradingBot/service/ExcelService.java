@@ -1,6 +1,7 @@
 package com.example.squeezyTradingBot.service;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
@@ -17,24 +18,24 @@ import java.util.List;
 @Service
 public class ExcelService {
 
-    public InputFile createExcelDocument(String fileName, String sheetName, List<List<String>> excelData){
+    public InputFile createExcelDocument(String fileName, String sheetName, List<List<String>> excelData) {
         File tmpFile;
         try {
             tmpFile = Files.createTempFile(fileName, ".xls").toFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Workbook book = new HSSFWorkbook();
-        Sheet sheet = book.createSheet(sheetName);
+        val book = new HSSFWorkbook();
+        val sheet = book.createSheet(sheetName);
 
         for (int y = 0; y < excelData.size(); y++) {
-            Row row = sheet.createRow(y);
+            val row = sheet.createRow(y);
             for (int x = 0; x < excelData.get(y).size(); x++) {
                 try {
                     double value = Double.parseDouble(excelData.get(y).get(x));
                     row.createCell(x).setCellType(Cell.CELL_TYPE_NUMERIC);
                     row.createCell(x).setCellValue(value);
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     row.createCell(x).setCellValue(excelData.get(y).get(x));
                 }
             }

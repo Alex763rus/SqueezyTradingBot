@@ -17,37 +17,21 @@ import javax.annotation.PreDestroy;
 @Slf4j
 @RestController
 @RequestMapping("/squeezy")
-public class SqueezyController {
-
-    private static final String SUCCESS_STATUS = "success";
-    private static final String ERROR_STATUS = "error";
-    private static final int CODE_SUCCESS = 100;
-
-    @Autowired
-    DistributionService distributionService;
+public class SqueezyController extends BaseController {
 
     @PostMapping("/start")
     public BaseResponse start(@RequestBody SqueezyStart request) {
-        log.info(String.valueOf(request));
-        final BaseResponse response = new BaseResponse(SUCCESS_STATUS, CODE_SUCCESS);
-        distributionService.sendTgMessageToAllWhiteList(request.toMessage());
-        return response;
+        return processPostRequestAndSendResponce(request);
     }
 
     @PostMapping("/blocking")
     public BaseResponse blocking(@RequestBody SqueezyBlocking request) {
-        log.info(String.valueOf(request));
-        final BaseResponse response = new BaseResponse(SUCCESS_STATUS, CODE_SUCCESS);
-        distributionService.sendTgMessageToAllWhiteList(request.toMessage());
-        return response;
+        return processPostRequestAndSendResponce(request);
     }
 
     @PostMapping("/unsorted")
     public BaseResponse unsorted(@RequestBody Unsorted request) {
-        log.info(String.valueOf(request));
-        final BaseResponse response = new BaseResponse(SUCCESS_STATUS, CODE_SUCCESS);
-        distributionService.sendTgMessageToAllWhiteList(request.toMessage());
-        return response;
+        return processPostRequestAndSendResponce(request);
     }
 
 }

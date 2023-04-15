@@ -7,6 +7,7 @@ import com.example.squeezyTradingBot.rest.request.StatisticSlTpFinish;
 import com.example.squeezyTradingBot.service.DistributionService;
 import com.example.squeezyTradingBot.service.ExcelService;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,14 +25,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/statistic")
-public class StatisticController {
-
-    private static final String SUCCESS_STATUS = "success";
-    private static final String ERROR_STATUS = "error";
-    private static final int CODE_SUCCESS = 100;
-
-    @Autowired
-    DistributionService distributionService;
+public class StatisticController extends BaseController {
 
     @Autowired
     private ExcelService excelService;
@@ -40,21 +34,22 @@ public class StatisticController {
     private double stepSqueezy;
     private double stepProfit;
     private double stepLoss;
+
     @PostMapping("/sltpfinish")
     public BaseResponse sltpfinish(@RequestBody StatisticSlTpFinish request) {
         log.info(String.valueOf(request));
-        final BaseResponse response = new BaseResponse(SUCCESS_STATUS, CODE_SUCCESS);
-        List<List<String>> excelData = getExcelData(request.getFileName());
-        String excelFileName = request.getFileName().substring(request.getFileName().lastIndexOf("\\") + 1, request.getFileName().lastIndexOf(".")) + "_";
-        distributionService.sendTgMessageToAllWhiteList(excelService.createExcelDocument(excelFileName, instrument, excelData));
-        return response;
+        val excelData = getExcelData(request.getFileName());
+        val fileName = request.getFileName();
+        val excelFileName = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.lastIndexOf(".")) + "_";
+        val inputFile = excelService.createExcelDocument(excelFileName, instrument, excelData);
+        return processPostRequestAndSendResponce(request, inputFile);
     }
 
     private List<List<String>> getExcelData(String statisticFileName) {
-        List<List<String>> excelData = new ArrayList<>();
-        ArrayList<TestData> testData = new ArrayList<>();
+        val excelData = new ArrayList<List<String>>();
+        val testData = new ArrayList<TestData>();
         boolean isHead = true;
-        try (BufferedReader reader = new BufferedReader(new FileReader(statisticFileName))) {
+        try (val reader = new BufferedReader(new FileReader(statisticFileName))) {
             String buf;
             while ((buf = reader.readLine()) != null) {
                 String[] lineArr = buf.replace(",", ".").split(";");
@@ -66,12 +61,13 @@ public class StatisticController {
                     isHead = false;
                     continue;
                 }
-                testData.add(
-                        new TestData(lineArr[0]                     //groupType FlatSell
-                                , lineArr[1]                        //side Sell
-                                , Double.parseDouble(lineArr[2])    //percent 1,0
-                                , Double.parseDouble(lineArr[3])    //percentProfit 1,5
-                                , Double.parseDouble(lineArr[4]))   //percentLoss 1,5
+                testData.add(TestData.init()
+                        .setGroupType(lineArr[0])
+                        .setSide(lineArr[1])
+                        .setSqueezyPercent(Double.parseDouble(lineArr[2]))
+                        .setMaxProfitPercent(Double.parseDouble(lineArr[3]))
+                        .setMaxLossPercent(Double.parseDouble(lineArr[4]))
+                        .build()
                 );
             }
         } catch (FileNotFoundException e) {
@@ -101,25 +97,23 @@ public class StatisticController {
     }
 
     private List<List<String>> getPrepareDataProfit(ArrayList<TestData> testData, String groupType) {
-        List<List<String>> excelData = new ArrayList<>();
-        Map<Double, Map<Double, Long>> groupTypeResult =
-                testData.stream().filter(e -> e.getGroupType().equalsIgnoreCase(groupType))
-                        .collect(Collectors.groupingBy(TestData::getSqueezyPercent,
-                                Collectors.groupingBy(TestData::getMaxProfitPercent, Collectors.counting())));
+        val excelData = new ArrayList<List<String>>();
+        val groupTypeResult = testData.stream().filter(e -> e.getGroupType().equalsIgnoreCase(groupType))
+                .collect(Collectors.groupingBy(TestData::getSqueezyPercent,
+                        Collectors.groupingBy(TestData::getMaxProfitPercent, Collectors.counting())));
 
-        TestData defaultTetData = new TestData();
-        TestData maxSqueezyPercent = testData.stream().
+        val maxSqueezyPercent = testData.stream().
                 filter(e -> e.getGroupType().equalsIgnoreCase(groupType))
                 .max(Comparator.comparingDouble(TestData::getSqueezyPercent))
-                .orElse(defaultTetData);
+                .orElse(TestData.init().build());
 
-        TestData maxProfitPercent = testData.stream().
+        val maxProfitPercent = testData.stream().
                 filter(e -> e.getGroupType().equalsIgnoreCase(groupType))
                 .max(Comparator.comparingDouble(TestData::getMaxProfitPercent))
-                .orElse(defaultTetData);
+                .orElse(TestData.init().build());
 
         //Заголовок:
-        ArrayList<String> headers = new ArrayList<>();
+        val headers = new ArrayList<String>();
         excelData.add(Arrays.asList("сквиз", "\\", "профит"));
         for (double x = 0; x <= maxProfitPercent.getMaxProfitPercent(); x = x + stepProfit) {
             if (x == 0) {
@@ -131,8 +125,8 @@ public class StatisticController {
 
         //Данные:
         for (double y = 0; y <= maxSqueezyPercent.getSqueezyPercent(); y = y + stepSqueezy) {
-            Map<Double, Long> line = groupTypeResult.get(Double.valueOf(y));
-            ArrayList<String> excelDataLine = new ArrayList<>();
+            val line = groupTypeResult.get(Double.valueOf(y));
+            val excelDataLine = new ArrayList<String>();
             excelDataLine.add(y + ":");
             for (double x = 0; x <= maxProfitPercent.getMaxProfitPercent(); x = x + stepProfit) {
                 if (line == null) {
@@ -148,25 +142,23 @@ public class StatisticController {
 
 
     private List<List<String>> getPrepareDataLoss(ArrayList<TestData> testData, String groupType) {
-        List<List<String>> excelData = new ArrayList<>();
-        Map<Double, Map<Double, Long>> groupTypeResult =
-                testData.stream().filter(e -> e.getGroupType().equalsIgnoreCase(groupType))
-                        .collect(Collectors.groupingBy(TestData::getSqueezyPercent,
-                                Collectors.groupingBy(TestData::getMaxLossPercent, Collectors.counting())));
+        val excelData = new ArrayList<List<String>>();
+        val groupTypeResult = testData.stream().filter(e -> e.getGroupType().equalsIgnoreCase(groupType))
+                .collect(Collectors.groupingBy(TestData::getSqueezyPercent,
+                        Collectors.groupingBy(TestData::getMaxLossPercent, Collectors.counting())));
 
-        TestData defaultTetData = new TestData();
-        TestData maxSqueezyPercent = testData.stream().
+        val maxSqueezyPercent = testData.stream().
                 filter(e -> e.getGroupType().equalsIgnoreCase(groupType))
                 .max(Comparator.comparingDouble(TestData::getSqueezyPercent))
-                .orElse(defaultTetData);
+                .orElse(TestData.init().build());
 
-        TestData maxLossPercent = testData.stream().
+        val maxLossPercent = testData.stream().
                 filter(e -> e.getGroupType().equalsIgnoreCase(groupType))
                 .max(Comparator.comparingDouble(TestData::getMaxLossPercent))
-                .orElse(defaultTetData);
+                .orElse(TestData.init().build());
 
         //Заголовок:
-        ArrayList<String> headers = new ArrayList<>();
+        val headers = new ArrayList<String>();
         excelData.add(Arrays.asList("сквиз", "\\", "просадка"));
         for (double x = 0; x <= maxLossPercent.getMaxLossPercent(); x = x + stepLoss) {
             if (x == 0) {
@@ -178,8 +170,8 @@ public class StatisticController {
 
         //Данные:
         for (double y = 0; y <= maxSqueezyPercent.getSqueezyPercent(); y = y + stepSqueezy) {
-            Map<Double, Long> line = groupTypeResult.get(Double.valueOf(y));
-            ArrayList<String> excelDataLine = new ArrayList<>();
+            val line = groupTypeResult.get(Double.valueOf(y));
+            val excelDataLine = new ArrayList<String>();
             excelDataLine.add(y + ":");
             for (double x = 0; x <= maxLossPercent.getMaxLossPercent(); x = x + stepLoss) {
                 if (line == null) {

@@ -2,9 +2,14 @@ package com.example.squeezyTradingBot.rest.request;
 
 import com.example.squeezyTradingBot.enums.Emoji;
 import com.vdurmont.emoji.EmojiParser;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@ToString
+@Setter
 public class SqueezyStart extends BaseRequest {
     private String version;
 

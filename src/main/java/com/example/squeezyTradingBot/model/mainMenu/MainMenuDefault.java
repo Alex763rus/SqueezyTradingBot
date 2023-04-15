@@ -2,6 +2,7 @@ package com.example.squeezyTradingBot.model.mainMenu;
 
 import com.example.squeezyTradingBot.model.jpa.User;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,8 +21,8 @@ public class MainMenuDefault extends MainMenu {
 
     @Override
     public PartialBotApiMethod menuRun(User user, Update update) {
-        String chatId = String.valueOf(update.getMessage().getChatId());
-        String command = update.getMessage().getText();
+        val chatId = String.valueOf(update.getMessage().getChatId());
+        val command = update.getMessage().getText();
         return new SendMessage(chatId, "..!.. Not a found command with name: " + command);
     }
 

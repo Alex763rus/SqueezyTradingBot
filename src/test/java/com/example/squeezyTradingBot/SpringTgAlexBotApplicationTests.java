@@ -19,20 +19,6 @@ import java.util.Set;
 @SpringBootTest
 class squeezyTradingBotApplicationTests {
 
-	@Test
-	void serializationWhiteList() throws JsonProcessingException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		WhiteListUserConfig whiteListUserConfig = new WhiteListUserConfig();
-		Set<Long> whiteListChatsID = new HashSet<>();
-		whiteListChatsID.add(77777L);
-		whiteListChatsID.add(8888L);
-		whiteListUserConfig.setWhiteListChatsID(whiteListChatsID);
-
-		String json = objectMapper.writeValueAsString(whiteListUserConfig);
-		System.out.println(json);
-	}
-
-
 	private WhiteListUserConfig whiteListUserConfig;
 
 	@Test

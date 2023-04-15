@@ -3,6 +3,7 @@ package com.example.squeezyTradingBot.model.jpa;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import lombok.val;
 
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -25,7 +26,7 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
-        User user = (User) o;
+        val user = (User) o;
         return getChatId().equals(user.getChatId());
     }
 

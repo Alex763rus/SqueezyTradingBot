@@ -7,10 +7,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 public interface MainMenuActivity {
 
-    public String getMenuName();
+    String getMenuName();
 
-    public String getDescription();
+    String getDescription();
 
-    public PartialBotApiMethod menuRun(User user, Update update);
+    PartialBotApiMethod menuRun(User user, Update update);
 
 }
