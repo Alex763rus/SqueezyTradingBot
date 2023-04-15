@@ -17,9 +17,9 @@ public class Unsorted extends BaseRequest {
 
     @Override
     public String toMessage() {
-        StringBuilder sb = new StringBuilder(stand).append(space).append(currency).append(space).append(" (формат TODO...)");
-        sb.append(endLine);
-        sb.append(message);
-        return sb.toString();
+        return new StringBuilder()
+                .append(stand).append(space).append(currency).append(space).append(" (формат TODO...)").append(endLine)
+                .append(message)
+                .toString();
     }
 }

@@ -37,8 +37,6 @@ public abstract class BaseRequest {
     }
 
     protected String getLineParam(String name, Object value) {
-        val lineParam = new StringBuilder();
-        lineParam.append(star).append(name).append(star).append(value).append(endLine);
-        return lineParam.toString();
+        return new StringBuilder().append(star).append(name).append(star).append(value).append(endLine).toString();
     }
 }

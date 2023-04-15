@@ -2,9 +2,7 @@ package com.example.squeezyTradingBot.rest.controller;
 
 import com.example.squeezyTradingBot.model.statistic.TestData;
 import com.example.squeezyTradingBot.rest.request.BaseResponse;
-import com.example.squeezyTradingBot.rest.request.SqueezyStart;
 import com.example.squeezyTradingBot.rest.request.StatisticSlTpFinish;
-import com.example.squeezyTradingBot.service.DistributionService;
 import com.example.squeezyTradingBot.service.ExcelService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -75,11 +72,7 @@ public class StatisticController extends BaseController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        try {
-//            Files.deleteIfExists(Path.of(botConfig.getStatisticPathSource()));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+
         excelData.addAll(getPrepareDataProfit(testData, "UPBUY"));
         excelData.addAll(getPrepareDataProfit(testData, "UPSELL"));
         excelData.addAll(getPrepareDataProfit(testData, "DOWNBUY"));

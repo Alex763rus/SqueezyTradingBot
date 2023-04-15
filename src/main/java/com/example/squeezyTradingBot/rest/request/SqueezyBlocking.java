@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import lombok.val;
 
 import static com.example.squeezyTradingBot.enums.Emoji.*;
 
@@ -22,10 +23,11 @@ public class SqueezyBlocking extends BaseRequest {
 
     @Override
     public String toMessage() {
-        Emoji emoji = state.equals("lock") ? LOCK : UNLOCK;
-        StringBuilder message = new StringBuilder(getEmojiCode(emoji)).append(stand).append(space).append(currency).append(space);
-        message.append(star).append(number).append(star).append(endLine);
-        message.append(getLineParam("Причина:", comment));
-        return message.toString();
+        val emoji = state.equals("lock") ? LOCK : UNLOCK;
+        return new StringBuilder()
+                .append(getEmojiCode(emoji)).append(stand).append(space).append(currency).append(space)
+                .append(star).append(number).append(star).append(endLine)
+                .append(getLineParam("Причина:", comment))
+                .toString();
     }
 }

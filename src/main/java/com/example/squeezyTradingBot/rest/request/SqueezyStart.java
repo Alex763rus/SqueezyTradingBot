@@ -15,8 +15,10 @@ public class SqueezyStart extends BaseRequest {
 
     @Override
     public String toMessage() {
-        StringBuilder message = new StringBuilder(EmojiParser.parseToUnicode(Emoji.ROBOT_FACE.getCode())).append(" Squeezy trading bot was started!").append(endLine);
-        message.append("Version: ").append(version);
-        return message.toString();
+        return new StringBuilder()
+                .append(EmojiParser.parseToUnicode(Emoji.ROBOT_FACE.getCode()))
+                .append(" Squeezy trading bot was started!").append(endLine)
+                .append("Version: ").append(version)
+                .toString();
     }
 }

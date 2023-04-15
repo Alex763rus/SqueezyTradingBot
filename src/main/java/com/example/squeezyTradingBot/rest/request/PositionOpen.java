@@ -24,14 +24,15 @@ public class PositionOpen extends BaseRequest {
 
     @Override
     public String toMessage() {
-        StringBuilder message = new StringBuilder(getEmojiCode(Emoji.SHOPPING_TROLLEY)).append(stand).append(space).append(currency).append(space);
-        message.append(star).append(number).append(star).append(endLine);
-        message.append(getLineParam("Группа: ", groupType));
-        message.append(getLineParam("Направление: ", side + " " + getEmojiSide(getSide())));
-        message.append(getLineParam("Объем: ", String.format("%.0f", volume)));
-        message.append(getLineParam("Причина открытия: ", signalTypeOpen));
-        message.append(getLineParam("Дата открытия: ", dateStart));
-        return message.toString();
+        return new StringBuilder()
+                .append(getEmojiCode(Emoji.SHOPPING_TROLLEY)).append(stand).append(space).append(currency).append(space)
+                .append(star).append(number).append(star).append(endLine)
+                .append(getLineParam("Группа: ", groupType))
+                .append(getLineParam("Направление: ", side + " " + getEmojiSide(getSide())))
+                .append(getLineParam("Объем: ", String.format("%.0f", volume)))
+                .append(getLineParam("Причина открытия: ", signalTypeOpen))
+                .append(getLineParam("Дата открытия: ", dateStart))
+                .toString();
     }
 
 }

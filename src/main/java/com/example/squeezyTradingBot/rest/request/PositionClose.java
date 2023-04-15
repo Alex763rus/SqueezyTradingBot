@@ -5,7 +5,7 @@ import com.example.squeezyTradingBot.enums.Emoji;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import lombok.val;
 
 import static com.example.squeezyTradingBot.enums.Emoji.MONEY_BAG;
 import static com.example.squeezyTradingBot.enums.Emoji.WARNING;
@@ -13,7 +13,7 @@ import static com.example.squeezyTradingBot.enums.Emoji.WARNING;
 @Getter
 @ToString
 @Setter
-public class PositionClose  extends PositionOpen {
+public class PositionClose extends PositionOpen {
 
     protected String dateClose;
     protected double profit;
@@ -23,19 +23,20 @@ public class PositionClose  extends PositionOpen {
 
     @Override
     public String toMessage() {
-        Emoji emoji = profit>0?MONEY_BAG:WARNING;
-        StringBuilder message = new StringBuilder(getEmojiCode(emoji)).append(stand).append(space).append(currency).append(space);
-        message.append(star).append(number).append(star).append(endLine);
-        message.append(getLineParam("Группа: ", groupType));
-        message.append(getLineParam("Направление: ", side + " " + getEmojiSide(getSide())));
-        message.append(getLineParam("Объем: ", String.format("%.0f", volume)));
-        message.append(getLineParam("Дата открытия: ", dateStart));
-        message.append(getLineParam("Дата закрытия: ", dateClose));
-        message.append(getLineParam("Причина закрытия:", signalTypeClose));
-        message.append(getLineParam("Комментарий:", comment));
-        message.append(getLineParam("Результат: ", String.format("%.5f", profit)));
-        message.append(getLineParam("Депозит: ", String.format("%.5f", deposit)));
-        return message.toString();
+        Emoji emoji = profit > 0 ? MONEY_BAG : WARNING;
+        return new StringBuilder()
+                .append(getEmojiCode(emoji)).append(stand).append(space).append(currency).append(space)
+                .append(star).append(number).append(star).append(endLine)
+                .append(getLineParam("Группа: ", groupType))
+                .append(getLineParam("Направление: ", side + " " + getEmojiSide(getSide())))
+                .append(getLineParam("Объем: ", String.format("%.0f", volume)))
+                .append(getLineParam("Дата открытия: ", dateStart))
+                .append(getLineParam("Дата закрытия: ", dateClose))
+                .append(getLineParam("Причина закрытия:", signalTypeClose))
+                .append(getLineParam("Комментарий:", comment))
+                .append(getLineParam("Результат: ", String.format("%.5f", profit)))
+                .append(getLineParam("Депозит: ", String.format("%.5f", deposit)))
+                .toString();
     }
 
 }
