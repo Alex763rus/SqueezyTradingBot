@@ -1,13 +1,10 @@
 package com.example.squeezyTradingBot.rest.controller;
 
 import com.example.squeezyTradingBot.rest.request.BaseRequest;
-import com.example.squeezyTradingBot.rest.request.BaseResponse;
+import com.example.squeezyTradingBot.rest.responce.BaseResponse;
 import com.example.squeezyTradingBot.service.DistributionService;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 @Slf4j

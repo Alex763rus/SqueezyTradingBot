@@ -1,6 +1,7 @@
-package com.example.squeezyTradingBot.rest.request;
+package com.example.squeezyTradingBot.rest.request.squeezy;
 
 import com.example.squeezyTradingBot.enums.Emoji;
+import com.example.squeezyTradingBot.rest.request.BaseRequest;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

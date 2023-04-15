@@ -1,11 +1,10 @@
-package com.example.squeezyTradingBot.rest.request;
+package com.example.squeezyTradingBot.rest.request.position;
 
 
 import com.example.squeezyTradingBot.enums.Emoji;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.val;
 
 import static com.example.squeezyTradingBot.enums.Emoji.MONEY_BAG;
 import static com.example.squeezyTradingBot.enums.Emoji.WARNING;

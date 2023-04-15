@@ -1,4 +1,4 @@
-package com.example.squeezyTradingBot.rest.request;
+package com.example.squeezyTradingBot.rest.responce;
 
 import lombok.Getter;
 import lombok.ToString;

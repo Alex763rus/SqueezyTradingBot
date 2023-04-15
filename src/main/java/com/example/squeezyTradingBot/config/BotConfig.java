@@ -36,6 +36,15 @@ public class BotConfig {
     @Value("${bot.token}")
     String botToken;
 
+    @Value("${osa.ping.enabled}")
+    Boolean osaPingEnabled;
+
+    @Value("${osa.ping.delay}")
+    Long osaPingDelay;
+
+    @Value("${osa.ping.inteval.check}")
+    Long osaPingIntervalCheck;
+
     @Bean
     public WhiteListUserConfig whiteListUsers() throws URISyntaxException, IOException {
         return WhiteListUserConfig.init()

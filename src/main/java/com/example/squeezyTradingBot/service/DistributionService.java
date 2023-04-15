@@ -3,7 +3,6 @@ package com.example.squeezyTradingBot.service;
 import com.example.squeezyTradingBot.config.BotConfig;
 import com.example.squeezyTradingBot.config.WhiteListUserConfig;
 import com.example.squeezyTradingBot.enums.Emoji;
-import com.example.squeezyTradingBot.rest.request.BaseResponse;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -16,7 +15,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.List;
 
 @Service
 @Slf4j

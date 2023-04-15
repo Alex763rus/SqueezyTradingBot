@@ -1,8 +1,8 @@
 package com.example.squeezyTradingBot.rest.controller;
 
 import com.example.squeezyTradingBot.model.statistic.TestData;
-import com.example.squeezyTradingBot.rest.request.BaseResponse;
-import com.example.squeezyTradingBot.rest.request.StatisticSlTpFinish;
+import com.example.squeezyTradingBot.rest.responce.BaseResponse;
+import com.example.squeezyTradingBot.rest.request.statistic.StatisticSlTpFinish;
 import com.example.squeezyTradingBot.service.ExcelService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
