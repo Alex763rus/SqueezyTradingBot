@@ -4,14 +4,13 @@ import com.example.squeezyTradingBot.rest.request.BaseRequest;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.val;
 
 import static com.example.squeezyTradingBot.enums.Emoji.*;
 
 @Getter
 @ToString
 @Setter
-public class SqueezyOk extends BaseRequest {
+public class SqueezyPing extends BaseRequest {
 
     protected String stand;
     protected String currency;

@@ -42,9 +42,6 @@ public class BotConfig {
     @Value("${osa.ping.delay}")
     Long osaPingDelay;
 
-    @Value("${osa.ping.inteval.check}")
-    Long osaPingIntervalCheck;
-
     @Bean
     public WhiteListUserConfig whiteListUsers() throws URISyntaxException, IOException {
         return WhiteListUserConfig.init()

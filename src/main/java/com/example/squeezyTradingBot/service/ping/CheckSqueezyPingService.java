@@ -42,7 +42,7 @@ public class CheckSqueezyPingService implements Runnable {
     public void run() {
         try {
             while (true) {
-                if ((System.currentTimeMillis() - lastPingTime) > botConfig.getOsaPingIntervalCheck()) {
+                if ((System.currentTimeMillis() - lastPingTime) > botConfig.getOsaPingDelay()) {
                     distributionService.sendTgMessageToAllWhiteList((new SqueezyNoPing()).toMessage());
                 }
                 Thread.sleep(botConfig.getOsaPingDelay());

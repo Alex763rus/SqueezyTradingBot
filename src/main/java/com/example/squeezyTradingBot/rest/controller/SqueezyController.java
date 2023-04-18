@@ -1,6 +1,6 @@
 package com.example.squeezyTradingBot.rest.controller;
 
-import com.example.squeezyTradingBot.rest.request.squeezy.SqueezyOk;
+import com.example.squeezyTradingBot.rest.request.squeezy.SqueezyPing;
 import com.example.squeezyTradingBot.rest.responce.BaseResponse;
 import com.example.squeezyTradingBot.rest.request.squeezy.SqueezyBlocking;
 import com.example.squeezyTradingBot.rest.request.squeezy.SqueezyStart;
@@ -20,10 +20,11 @@ public class SqueezyController extends BaseController {
     }
 
 
-    @PostMapping("/ok")
-    public BaseResponse start(@RequestBody SqueezyOk request) {
+    @PostMapping("/ping")
+    public BaseResponse start(@RequestBody SqueezyPing request) {
         CheckSqueezyPingService.updateLastPingTime();
-        return processPostRequestAndSendResponce(request);
+        log.info("Сквизи на связи, работаем!" + request.toMessage());
+        return new BaseResponse(SUCCESS_STATUS, CODE_SUCCESS);
     }
 
     @PostMapping("/start")
